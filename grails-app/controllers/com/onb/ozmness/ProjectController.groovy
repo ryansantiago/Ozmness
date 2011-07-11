@@ -1,8 +1,12 @@
 package com.onb.ozmness
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class ProjectController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	def springSecurityService
 
     def index = {
         redirect(action: "list", params: params)
@@ -21,7 +25,10 @@ class ProjectController {
 
     def save = {
         def projectInstance = new Project(params)
-        if (projectInstance.save(flush: true)) {
+        if (!springSecurityService.currentUser.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
+            flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
+            render(view: "create", model: [projectInstance: projectInstance])
+		} else if (projectInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])}"
             redirect(action: "show", id: projectInstance.id)
         }
@@ -37,7 +44,7 @@ class ProjectController {
             redirect(action: "list")
         }
         else {
-            [projectInstance: projectInstance]
+				[projectInstance: projectInstance]
         }
     }
 
@@ -48,7 +55,12 @@ class ProjectController {
             redirect(action: "list")
         }
         else {
-            return [projectInstance: projectInstance]
+	        if (!springSecurityService.currentUser.username.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
+	            flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
+                redirect(action: "list")
+			} else {
+				return [projectInstance: projectInstance]
+			}
         }
     }
 
@@ -65,7 +77,11 @@ class ProjectController {
                 }
             }
             projectInstance.properties = params
-            if (!projectInstance.hasErrors() && projectInstance.save(flush: true)) {
+			
+	        if (!springSecurityService.currentUser.username.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
+	            flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
+                render(view: "edit", model: [projectInstance: projectInstance])
+			} else if (!projectInstance.hasErrors() && projectInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])}"
                 redirect(action: "show", id: projectInstance.id)
             }
@@ -82,6 +98,11 @@ class ProjectController {
     def delete = {
         def projectInstance = Project.get(params.id)
         if (projectInstance) {
+			
+			if (!springSecurityService.currentUser.username.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
+				flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
+                redirect(action: "list")
+			}
             try {
                 projectInstance.delete(flush: true)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), params.id])}"

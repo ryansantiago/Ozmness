@@ -1,10 +1,12 @@
 package com.onb.ozmness
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class EmployeeController {
 
-	def scaffold = true
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
-    /*static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	def springSecurityService
 
     def index = {
         redirect(action: "list", params: params)
@@ -23,7 +25,13 @@ class EmployeeController {
 
     def save = {
         def employeeInstance = new Employee(params)
+		
+		
+		println employeeInstance.password + " save " + employeeInstance.username
+		employeeInstance.password = springSecurityService.encodePassword(employeeInstance.password)
         if (employeeInstance.save(flush: true)) {
+			def role = Role.findByAuthority("ROLE_DEV") ?: new Role(authority: "ROLE_DEV").save()
+			UserRole.create( employeeInstance, role )
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'employee.label', default: 'Employee'), employeeInstance.id])}"
             redirect(action: "show", id: employeeInstance.id)
         }
@@ -44,13 +52,19 @@ class EmployeeController {
     }
 
     def edit = {
+		println springSecurityService.currentUser.username
         def employeeInstance = Employee.get(params.id)
         if (!employeeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'employee.label', default: 'Employee'), params.id])}"
             redirect(action: "list")
         }
         else {
-            return [employeeInstance: employeeInstance]
+			if (!springSecurityService.currentUser.username.equals('admin') && employeeInstance.id != springSecurityService.currentUser.id) {
+				flash.message = "${message(code: 'employee.unprivileged')}"
+				redirect(action: "list")
+			} else {
+            	return [employeeInstance: employeeInstance]
+			}
         }
     }
 
@@ -67,7 +81,7 @@ class EmployeeController {
                 }
             }
             employeeInstance.properties = params
-            if (!employeeInstance.hasErrors() && employeeInstance.save(flush: true)) {
+			if (!employeeInstance.hasErrors() && employeeInstance.save(flush: true)) {
                 flash.message = "${message(code: 'default.updated.message', args: [message(code: 'employee.label', default: 'Employee'), employeeInstance.id])}"
                 redirect(action: "show", id: employeeInstance.id)
             }
@@ -84,6 +98,10 @@ class EmployeeController {
     def delete = {
         def employeeInstance = Employee.get(params.id)
         if (employeeInstance) {
+			if (!springSecurityService.currentUser.username.equals('admin') && employeeInstance.id != springSecurityService.currentUser.id) {
+				flash.message = "${message(code: 'employee.unprivileged')}"
+				redirect(action: "list")
+			}
             try {
                 employeeInstance.delete(flush: true)
                 flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'employee.label', default: 'Employee'), params.id])}"
@@ -98,5 +116,5 @@ class EmployeeController {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'employee.label', default: 'Employee'), params.id])}"
             redirect(action: "list")
         }
-    }*/
+    }
 }

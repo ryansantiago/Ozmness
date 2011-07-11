@@ -19,7 +19,7 @@ class Rating {
     }
 	
 	static mapping = {
-		technology cascade: 'none'
+//		technology cascade: 'none'
 	}
 	
 	String toString() {

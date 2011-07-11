@@ -5,9 +5,9 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 class RatingController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def springSecurityService
 	
+	def springSecurityService
+
     def index = {
         redirect(action: "list", params: params)
     }
@@ -25,7 +25,7 @@ class RatingController {
 
     def save = {
         def ratingInstance = new Rating(params)
-        if (!springSecurityService.currentUser.equals('admin') && ratingInstance.creator.id != springSecurityService.currentUser.id) {				
+        if (!springSecurityService.currentUser.username.equals('admin') && ratingInstance.creator.id != springSecurityService.currentUser.id) {				
 				flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'rating.label', default: 'Rating'), 'creator'])}"
             render(view: "create", model: [ratingInstance: ratingInstance])
 		} else if (ratingInstance.save(flush: true)) {
@@ -59,7 +59,7 @@ class RatingController {
 				flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'rating.label', default: 'Rating'), 'creator'])}"
 				redirect(action: "list")
 			} else {
-            	return [ratingInstance: ratingInstance]
+				return [ratingInstance: ratingInstance]
 			}
         }
     }
@@ -88,8 +88,7 @@ class RatingController {
             else {
                 render(view: "edit", model: [ratingInstance: ratingInstance])
             }
-        }
-        else {
+        } else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'rating.label', default: 'Rating'), params.id])}"
             redirect(action: "list")
         }
@@ -98,6 +97,7 @@ class RatingController {
     def delete = {
         def ratingInstance = Rating.get(params.id)
         if (ratingInstance) {
+			
 			if (!springSecurityService.currentUser.username.equals('admin') && ratingInstance.creator.id != springSecurityService.currentUser.id) {
 				flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'rating.label', default: 'Rating'), 'creator'])}"
                 redirect(action: "list")
