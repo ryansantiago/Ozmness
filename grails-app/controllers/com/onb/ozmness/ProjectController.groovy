@@ -25,10 +25,13 @@ class ProjectController {
 
     def save = {
         def projectInstance = new Project(params)
-        if (!springSecurityService.currentUser.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
+        if (!springSecurityService.currentUser.username.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
             flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
             render(view: "create", model: [projectInstance: projectInstance])
 		} else if (projectInstance.save(flush: true)) {
+		
+			//executeUpdate 'INSERT INTO employee_projects (employee_id, project_id) VALUES (:employeeId, :projectId)', [employeedId: projectInstance.lead.id, projectId: projectInstance.id]
+			
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])}"
             redirect(action: "show", id: projectInstance.id)
         }
@@ -118,4 +121,19 @@ class ProjectController {
             redirect(action: "list")
         }
     }
+	
+	def selection = {
+		def projectInstanceList = []
+		for (def project : Project.list()) {
+			for (def employee : project.employees) {
+				if (employee.id == springSecurityService.currentUser.id) {
+					println project.name
+					projectInstanceList.add(project)
+					break
+				}
+			}
+		}
+		
+		return [projectInstanceList: projectInstanceList]
+	}
 }

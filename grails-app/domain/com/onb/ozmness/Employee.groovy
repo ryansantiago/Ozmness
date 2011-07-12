@@ -1,5 +1,7 @@
 package com.onb.ozmness
 
+import java.util.Set;
+
 class Employee extends User {
 	
 	String lastName
@@ -24,10 +26,14 @@ class Employee extends User {
     }
 	
 	static mapping = {
-		//projects cascade: 'none'
 	}
 	
 	String toString() {
 		lastName + ", " + firstName
+	}
+	
+	List<User> getMentees(User user) {
+		def menteeList = Employee.findAllByMentor(user)
+		return menteeList.asList()
 	}
 }

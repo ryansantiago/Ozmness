@@ -51,15 +51,6 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="creator"><g:message code="rating.creator.label" default="Creator" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: ratingInstance, field: 'creator', 'errors')}">
-                                    <g:select name="creator.id" from="${com.onb.ozmness.Employee.list()}" optionKey="id" value="${ratingInstance?.creator?.id}"  />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                   <label for="rated"><g:message code="rating.rated.label" default="Rated" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: ratingInstance, field: 'rated', 'errors')}">

@@ -51,7 +51,7 @@
                                     <label for="rated"><g:message code="rating.rated.label" default="Rated" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: ratingInstance, field: 'rated', 'errors')}">
-                                    <g:select name="rated.id" from="${ratedEmployeeList}" optionKey="id" value="${ratingInstance?.rated?.id}"  />
+                                    <g:select name="rated.id" from="${com.onb.ozmness.Employee.list()}" optionKey="id" value="${ratingInstance?.rated?.id}"  />
                                 </td>
                             </tr>
                         

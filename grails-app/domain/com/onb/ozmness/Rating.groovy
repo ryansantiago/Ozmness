@@ -10,7 +10,10 @@ class Rating {
 	Technology technology
 	
     static constraints = {
-		value()
+		value(validator: {
+			if (it<1 || it>3)
+				return ["error.outOfRange", it]
+		})
 		comment()
 		dateCreated()
 		creator()
