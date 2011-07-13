@@ -16,7 +16,7 @@ class Employee extends User {
 		password()
 		lastName()
 		firstName()
-		position()
+		position(nullable: true)
 		mentor(nullable: true)
 		projects()
 		enabled()
