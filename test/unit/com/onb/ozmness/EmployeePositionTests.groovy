@@ -12,6 +12,15 @@ class EmployeePositionTests extends GrailsUnitTestCase {
     }
 
     void testSomething() {
-
+		mockDomain(EmployeePosition)
+		def pos = new EmployeePosition(name: "CEO")
+		
+		assert pos.validate();
+		assert pos.save()
+		
+		pos = EmployeePosition.findByName("CEO")
+		assertNotNull pos
+		
+		assert pos.validate()
     }
 }
