@@ -11,7 +11,7 @@ class EmployeePositionTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-    void testSomething() {
+    void testSaveEmployeePosition() {
 		mockDomain(EmployeePosition)
 		def pos = new EmployeePosition(name: "CEO")
 		
