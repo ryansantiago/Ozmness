@@ -139,10 +139,12 @@ class EmployeeController {
 	
 	def mentees = {
 		def mentees = Employee.findAllByMentor(springSecurityService.currentUser)
-		return [menteeList: mentees]
+		return [menteeList: mentees, menteeListTotal: mentees.count()]
 	}
 	
 	def control = {
-		
+		if (springSecurityService.currentUser.username.equals("admin")) {
+			redirect(action: "..")
+		}
 	}
 }

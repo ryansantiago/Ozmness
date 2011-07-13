@@ -8,7 +8,6 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
-    	${mentees }
         <div class="nav">
             <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
             <%--<span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>--%>
@@ -43,17 +42,17 @@
                             
                             <td><g:link action="show" id="${employeeInstance.id}">Show Info</g:link></td>
                             
-                            <td><g:link controller="rating" action="showByEmployee" id="${employeeInstance.id}">View Ratings</g:link></td>
+                            <td><g:link controller="rating" action="byEmployee" id="${employeeInstance.id}">View Ratings</g:link></td>
                         </tr>
                     </g:each>
                     </tbody>
                 </table>
-                <br/>
-			<g:link controller="employee" action="control">&lt;&lt;&nbsp;Back to Employee Control</g:link>
-            </div><%--
-            <div class="paginateButtons">
-                <g:paginate total="${menteeTotal}" />
             </div>
-        --%></div>
+            <g:if test="${menteeListTotal > 10 }">
+            <div class="paginateButtons">
+                <g:paginate total="${menteeListTotal}" />
+            </div>
+            </g:if><br/>
+			<g:link controller="employee" action="control">&lt;&lt;&nbsp;Back to Employee Control</g:link>
     </body>
 </html>

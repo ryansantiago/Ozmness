@@ -56,8 +56,7 @@ class ProjectController {
         if (!projectInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.id])}"
             redirect(action: "list")
-        }
-        else {
+        } else {
 	        if (!springSecurityService.currentUser.username.equals('admin') && projectInstance.lead.id != springSecurityService.currentUser.id) {
 	            flash.message = "${message(code: 'domain.invalidCreator', args: [message(code: 'project.label', default: 'Project'), 'lead'])}"
                 redirect(action: "list")
@@ -134,6 +133,6 @@ class ProjectController {
 			}
 		}
 		
-		return [projectInstanceList: projectInstanceList]
+		return [projectInstanceList: projectInstanceList, projectInstanceListTotal: projectInstanceList.count()]
 	}
 }

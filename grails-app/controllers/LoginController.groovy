@@ -28,6 +28,7 @@ class LoginController {
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
 	 */
 	def index = {
+			println "index isLoggedIn"
 		if (springSecurityService.isLoggedIn()) {
 			redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
 		}
@@ -40,16 +41,19 @@ class LoginController {
 	 * Show the login page.
 	 */
 	def auth = {
-
+		
+		println "auth isLoggedIn"
 		def config = SpringSecurityUtils.securityConfig
 
 		if (springSecurityService.isLoggedIn()) {
+			println "index isLoggedIn2"
 			redirect uri: config.successHandler.defaultTargetUrl
 			return
 		}
 
 		String view = 'auth'
 		String postUrl = "${request.contextPath}${config.apf.filterProcessesUrl}"
+		println postUrl
 		render view: view, model: [postUrl: postUrl,
 		                           rememberMeParameter: config.rememberMe.parameter]
 	}
@@ -58,6 +62,7 @@ class LoginController {
 	 * The redirect action for Ajax requests. 
 	 */
 	def authAjax = {
+		println "authAjax"
 		response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
 		response.sendError HttpServletResponse.SC_UNAUTHORIZED
 	}
@@ -77,6 +82,7 @@ class LoginController {
 	 * Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page.
 	 */
 	def full = {
+		println "full"
 		def config = SpringSecurityUtils.securityConfig
 		render view: 'auth', params: params,
 			model: [hasCookie: authenticationTrustResolver.isRememberMe(SCH.context?.authentication),
@@ -87,6 +93,7 @@ class LoginController {
 	 * Callback after a failed login. Redirects to the auth page with a warning message.
 	 */
 	def authfail = {
+		println "authFail"
 
 		def username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY]
 		String msg = ''
@@ -122,6 +129,7 @@ class LoginController {
 	 * The Ajax success redirect url.
 	 */
 	def ajaxSuccess = {
+		println "ajaxSuccess"
 		render([success: true, username: springSecurityService.authentication.name] as JSON)
 	}
 

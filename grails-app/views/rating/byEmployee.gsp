@@ -24,8 +24,6 @@
                     <thead>
                         <tr>
                         
-                            <g:sortableColumn property="id" title="${message(code: 'rating.id.label', default: 'Id')}" />
-                        
                             <g:sortableColumn property="value" title="${message(code: 'rating.value.label', default: 'Value')}" />
                         
                             <g:sortableColumn property="comment" title="${message(code: 'rating.comment.label', default: 'Comment')}" />
@@ -33,13 +31,13 @@
                             <g:sortableColumn property="dateCreated" title="${message(code: 'rating.dateCreated.label', default: 'Date Created')}" />
                         
                             <th><g:message code="rating.creator.label" default="Creator" /></th>
+                            
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     <g:each in="${ratingInstanceList}" status="i" var="ratingInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                        
-                            <td><g:link action="show" id="${ratingInstance.id}">${fieldValue(bean: ratingInstance, field: "id")}</g:link></td>
                         
                             <td>${fieldValue(bean: ratingInstance, field: "value")}</td>
                         
@@ -49,18 +47,20 @@
                         
                             <td>${fieldValue(bean: ratingInstance, field: "creator")}</td>
                         
+                            <td><g:link action="show" id="${ratingInstance.id}">[Edit]</g:link></td>
+                        
                         </tr>
                     </g:each>
                     </tbody>
                 </table>
             </div>
-            <br/>
+            <g:if test="${ratingInstanceListTotal > 10 }">
+            <div class="paginateButtons">
+                <g:paginate total="${ratingInstanceListTotal}" />
+            </div>
+            </g:if><br/>
 			<g:link action="selection">&lt;&lt;&nbsp;Back to Employee Rating Select</g:link><br/>
 			<g:link controller="employee" action="control">&lt;&lt;&nbsp;Back to Employee Control</g:link>
-            	<%--
-            <div class="paginateButtons">
-                <g:paginate total="${ratingInstanceTotal}" />
-            </div>
-        --%></div>
+        </div>
     </body>
 </html>

@@ -65,6 +65,8 @@ environments {
 
 }
 
+//defaultTargetURL alwaysUseDefault
+
 // log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console
@@ -97,8 +99,14 @@ grails.plugins.springsecurity.authority.className = 'com.onb.ozmness.Role'
 
 import grails.plugins.springsecurity.SecurityConfigType
 
+
+grails.plugins.springsecurity.successHandler.defaultTargetUrl = "/employee/control"
+grails.plugins.springsecurity.successHandler.alwaysUseDefault = true
+
+
 grails.plugins.springsecurity.rejectIfNoRule = false
 grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
+
 grails.plugins.springsecurity.interceptUrlMap = [
 	'/':	 ['IS_AUTHENTICATED_ANONYMOUSLY'],
 	"/image/**":	['IS_AUTHENTICATED_ANONYMOUSLY'],

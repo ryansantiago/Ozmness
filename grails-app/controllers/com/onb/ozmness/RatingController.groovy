@@ -147,11 +147,17 @@ class RatingController {
 
     def byEmployee = {
 		def employee = Employee.findById(params.id)
-		def rated = [:]
-		rated.id = employee.id
-		rated.name = employee.username == springSecurityService.currentUser.username ? "My" : employee.firstName
-		rated.thirdPerson = employee.firstName
-        [ratingInstanceList: Rating.findAllByRated(employee), rated: rated]
+		if (employee) {
+			def rated = [:]
+			rated.id = employee.id
+			rated.name = employee.username == springSecurityService.currentUser.username ? "My" : employee.firstName
+			rated.thirdPerson = employee.firstName
+			def ratingInstanceList = Rating.findAllByRated(employee)
+	        [ratingInstanceList: ratingInstanceList, rated: rated, ratingInstanceListTotal: ratingInstanceList.count()]
+		} else {
+            flash.message = "${message(code: 'rating.employee.notFound')}"
+            redirect(action: "selection")
+		}
     }
 
     def forEmployee = {
@@ -162,8 +168,8 @@ class RatingController {
     }
 	
 	def selection = {
-		def mentees = Employee.findAllByMentor(springSecurityService.currentUser)
+		def menteeList = Employee.findAllByMentor(springSecurityService.currentUser)
 		def self = Employee.findById(springSecurityService.currentUser.id)
-		return [mentees: mentees, self: self]
+		return [menteeList: menteeList, self: self, menteeListTotal: menteeList.count()]
 	}
 }

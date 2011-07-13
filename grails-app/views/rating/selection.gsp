@@ -16,13 +16,29 @@
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
-			<label>Mentored Employees</label>
-			<ul>
-				<g:each in="${mentees}" status="i" var="employeeInstance">
-					<li><g:link action="byEmployee" id="${employeeInstance.id}">${employeeInstance}</g:link></li>
-				</g:each>
-            </ul>
-            <br/>
+			<h2>Mentored Employees</h2>
+			
+            <div class="list">
+                <table>
+                    <thead>
+                        <tr>
+                            <g:sortableColumn property="lastName" title="${message(code: 'employee.lastName.label', default: 'Name')}" />
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <g:each in="${menteeList}" status="i" var="employeeInstance">
+                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+							<td><g:link action="byEmployee" id="${employeeInstance.id}">${employeeInstance}</g:link></td>
+                        </tr>
+                    </g:each>
+                    </tbody>
+				</table>
+            </div>
+            <g:if test="${menteeListTotal > 10 }">
+            <div class="paginateButtons">
+                <g:paginate total="${menteeListTotal}" />
+            </div>
+			</g:if><br/>
 			<g:link action="byEmployee" id="${self.id}">View my ratings</g:link></li><br/><br/>
 				
 			<g:link controller="employee" action="control">&lt;&lt;&nbsp;Back to Employee Control</g:link>

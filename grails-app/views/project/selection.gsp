@@ -30,10 +30,15 @@
                         </tr>
                     </g:each>
                     </tbody>
-                </table><br/><br/>
+                </table>
+            </div>
+            <g:if test="${projectInstanceListTotal > 10 }">
+            <div class="paginateButtons">
+                <g:paginate total="${projectInstanceListTotal}" />
+            </div>
+            </g:if><br/><br/>
 				
 				<g:link controller="employee" action="control">&lt;&lt;&nbsp;Back to Employee Control</g:link>
-            </div>
         </div>
     </body>
 </html>
