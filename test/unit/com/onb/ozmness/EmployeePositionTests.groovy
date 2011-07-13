@@ -12,6 +12,7 @@ class EmployeePositionTests extends GrailsUnitTestCase {
 	}
 
 	void testSaveEmployeePosition() {
+		
 		mockDomain(EmployeePosition)
 		def pos = new EmployeePosition(name: "CEO")
 
@@ -22,9 +23,12 @@ class EmployeePositionTests extends GrailsUnitTestCase {
 		assertNotNull pos
 
 		assert pos.validate()
+		
+		
 	}
 
 	void testDeleteEmployeePosition() {
+		
 		mockDomain(EmployeePosition)
 		def pos = new EmployeePosition(name: "Associate Software Engineer")
 
